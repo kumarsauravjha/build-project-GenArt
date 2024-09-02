@@ -3,77 +3,114 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- Importing the Swiper files -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
-    <link rel="stylesheet" href="style.css"/>
-  
-    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>    
     <title>A Generative Art Gallery</title>
 
+    <!-- Swiper Library -->
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>   
     
+    <!-- CSS Reset -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reset-css@5.0.2/reset.min.css">
+
+    <!-- Swiper Styles -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+
+    <!-- Custom Styles -->
+    <link rel="stylesheet" href="style.css">
+
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            overflow: hidden; /* Hide scrollbars */
+        }
+        canvas {
+            display: block; /* Remove any space below the canvas */
+        }
+    </style>
 </head>
 <body>
+    <main>
     <!-- <a href="RANDOM_SLIDER/index.html">RANDOM_SLIDER</a> -->
     <!-- <iframe src="RANDOM_SLIDER/index.html" title="Random Slider" height="800" width="800"></iframe> -->
     <!-- <iframe src="PACMAN/index.html" title="PACMAN" height="800" width="800"></iframe>     -->
     <!-- Slider main container -->
-    <div class="swiper">
-        <!-- Additional required wrapper -->
-        <div class="swiper-wrapper">
-        <!-- Slides -->
-            <div class="swiper-slide" id="sketch_1">
-                <iframe src="sketches/RANDOM_SLIDER/index.html" title="Random Slider" height="600" width="600" frameBorder="0"></iframe>
+        <div class="swiper">
+            <!-- Additional required wrapper -->
+            <div class="swiper-wrapper">
+                <!-- Slides -->
+                <!-- <div class="swiper-slide" id="title">
+                    <h1>&#129302; A Generative Art Gallery &#128508;</h1>
+                    <br><br>
+                    <br><br>
+                    <h2>by Saurav</h2>
+                </div>    -->
+                <div class="swiper-slide" id="sketch_intro">
+                    <iframe data-src="sketches/INTRO/index.html" title="Intro" height="900" width="900"></iframe>
+                </div>                  
+                <div class="swiper-slide" id="sketch_1">
+                    <iframe data-src="sketches/RANDOM_SLIDER/index.html" title="Random Slider" frameBorder="0" height="700" width="700"></iframe>
+                </div>
+                <div class="swiper-slide" id="sketch_2">
+                    <iframe data-src="sketches/TRIPPY_SHAPES/index.html" title="Trippy Mouse" frameBorder="0" height="700" width="700"></iframe>
+                </div>      
+                <div class="swiper-slide" id="sketch_3">
+                    <iframe data-src="sketches/CAMERA/index.html" title="Shutter" frameBorder="0" height="700" width="700"></iframe>
+                </div>       
+                <div class="swiper-slide" id="sketch_4">
+                    <iframe data-src="sketches/CAMERA2/index.html" title="Trippy Camera" frameBorder="0" height="700" width="700"></iframe>
+                </div>                        
+                <div class="swiper-slide" id="sketch_5">
+                    <iframe data-src="sketches/PACMAN/index.html" title="PACMAN" frameBorder="0" height="700" width="700"></iframe>    
+                </div>
             </div>
-            <div class="swiper-slide" id="sketch_2">
-                <iframe src="sketches/PACMAN/index.html" title="PACMAN" height="600" width="600"></iframe>    
-            </div>
-            <div class="swiper-slide" id="sketch_3">SO What</div>
-        </div>
-        <!-- If we need pagination -->
-        <div class="swiper-pagination"></div>
+            <!-- If we need pagination -->
+            <div class="swiper-pagination"></div>
+        
+            <!-- If we need navigation buttons -->
+            <div class="swiper-button-prev"></div>
+            <div class="swiper-button-next"></div>
+        
+            <!-- If we need scrollbar -->
+            <div class="swiper-scrollbar"></div>
+        </div> 
+    </main>
     
-        <!-- If we need navigation buttons -->
-        <div class="swiper-button-prev"></div>
-        <div class="swiper-button-next"></div>
-    
-        <!-- If we need scrollbar -->
-        <div class="swiper-scrollbar"></div>
-    </div> 
     
     <script>
         const swiper = new Swiper('.swiper', {
-        // Optional parameters
-        direction: 'horizontal',
-        loop: false,
-
-        // If we need pagination
-        pagination: {
-            el: '.swiper-pagination',
-        },
-
-        // Navigation arrows
-        navigation: {
-            nextEl: '.swiper-button-next',
-            prevEl: '.swiper-button-prev',
-        },
-
-        // And if we need scrollbar
-        scrollbar: {
-            el: '.swiper-scrollbar',
-        },
+            direction: 'vertical',
+            loop: false,
+            pagination: {
+                el: '.swiper-pagination',
+            },
+            navigation: {
+                nextEl: '.swiper-button-next',
+                prevEl: '.swiper-button-prev',
+            },
+            scrollbar: {
+                el: '.swiper-scrollbar',
+            },
         });
-
-        
-        // Custom Code: only "load" a P5.js sketch when navigating to a slide
+    
+        function loadIframe(slideIndex) {
+            document.querySelectorAll('.swiper-slide iframe').forEach(iframe => {
+                iframe.src = '';
+            });
+    
+            const activeSlide = swiper.slides[slideIndex];
+            const iframe = activeSlide.querySelector('iframe');
+            if (iframe) {
+                iframe.src = iframe.getAttribute('data-src');
+            }
+        }
+    
+        loadIframe(swiper.activeIndex);
+    
         swiper.on('slideChange', () => {
-            // unload the sketch on the previous slide
-            const prev_iframe = swiper.slides[swiper.previousIndex].querySelector('.sketch');
-            if(prev_iframe) prev_iframe.src = "";
-
-            // load the sketch on the new slide
-            const iframe = swiper.slides[swiper.activeIndex].querySelector('.sketch');
-            if (iframe) iframe.src = iframe.getAttribute('data-src');
-        });        
+            loadIframe(swiper.activeIndex);
+        });
     </script>
+    
 </body>
 </html>
